@@ -5,7 +5,7 @@
 </head>
 <body>
 
-<h1>🏦 DevOps Banking App</h1>
+<h1> Pradeep Banking App</h1>
 
 <h2>Create Account</h2>
 <form action="/create" method="post">
@@ -31,6 +31,14 @@
 <form action="/account" method="post">
     Account No: <input type="number" name="acc" required>
     <button type="submit">Check</button>
+</form>
+
+<h2>Remove Account</h2>
+<form action="/delete" method="post">
+    Account No: <input type="number" name="acc" required>
+    <button type="submit" style="background-color:red;color:white;">
+        Remove Account
+    </button>
 </form>
 
 </body>
