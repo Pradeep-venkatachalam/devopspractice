@@ -5,6 +5,7 @@ app = Flask(__name__)
 accounts = {}
 acc_no = 1000
 
+
 @app.route("/")
 def home():
     return render_template("index.html")
@@ -59,4 +60,16 @@ def account():
     return "Account not found"
 
 
-app.run(host="0.0.0.0", port=5001)
+# ✅ DELETE ACCOUNT ADDED
+@app.route("/delete", methods=["POST"])
+def delete():
+    acc = int(request.form["acc"])
+
+    if acc in accounts:
+        del accounts[acc]
+        return f"Account {acc} deleted successfully"
+    return "Account not found"
+
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5001, debug=True)
