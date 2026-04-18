@@ -19,25 +19,25 @@ jobs:
       - name: Install SSH client
         run: sudo apt-get update && sudo apt-get install -y openssh-client
 
-      - name: Copy files to EC2
+      - name: Copy project to EC2
         run: |
-          scp -o StrictHostKeyChecking=no -i pradeepkey.pem app.py ec2-user@13.233.127.9:/home/ec2-user/
-          scp -o StrictHostKeyChecking=no -i pradeepkey.pem requirements.txt ec2-user@13.233.127.9:/home/ec2-user/
+          scp -o StrictHostKeyChecking=no -i pradeepkey.pem -r . ec2-user@13.233.127.9:/home/ec2-user/app
 
-      - name: Deploy application on EC2
+      - name: Deploy using Docker on EC2
         run: |
           ssh -o StrictHostKeyChecking=no -i pradeepkey.pem ec2-user@13.233.127.9 << 'EOF'
 
-          cd /home/ec2-user
+          cd /home/ec2-user/app
 
-          echo "Stopping old app..."
-          pkill -f app.py || true
+          echo "Stopping old container..."
+          docker stop banking-app || true
+          docker rm banking-app || true
 
-          echo "Installing dependencies..."
-          pip3 install --user -r requirements.txt
+          echo "Building Docker image..."
+          docker build -t banking-app .
 
-          echo "Starting app..."
-          nohup python3 app.py > app.log 2>&1 &
+          echo "Running container..."
+          docker run -d -p 5001:5001 --name banking-app banking-app
 
-          echo "Deployment completed 🚀"
+          echo "Deployment successful 🚀"
           EOF
