@@ -1,16 +1,14 @@
-from flask import Flask, jsonify
+from flask import Flask
 
 app = Flask(__name__)
 
-@app.route('/')
+@app.route("/")
 def home():
-    return "Hello, Flask App is Running!"
+    return "Hello from DevOps Banking Project "
 
-@app.route('/api')
-def api():
-    return jsonify({
-        "message": "Welcome to Flask API"
-    })
+@app.route("/health")
+def health():
+    return "OK - Service is Running"
 
-if __name__ == '__main__':
-    app.run(debug=True)
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5001)
