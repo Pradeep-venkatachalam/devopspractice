@@ -1,27 +1,45 @@
-name: aws-pipeline
+name: AWS CI Pipeline
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - main
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
+      # 1. Checkout code
       - name: Checkout code
         uses: actions/checkout@v4
 
+      # 2. Setup Python
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.10"
           cache: "pip"
 
+      # 3. Install dependencies
       - name: Install dependencies
         run: |
-          pip install --upgrade pip
+          python -m pip install --upgrade pip
           pip install -r requirements.txt
 
+      # 4. Run basic app check
       - name: Run basic check
         run: |
-          python -c "import app; print('Build successful')"
+          python -c "import app; print('Build successful ✅')"
+
+      # 5. (Optional) Lint check
+      - name: Lint (optional)
+        run: |
+          pip install flake8
+          flake8 . || true
+
+      # 6. (Optional) Test step
+      - name: Run tests (optional)
+        run: |
+          echo "No tests yet"
