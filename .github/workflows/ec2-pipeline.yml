@@ -11,36 +11,30 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      
       - name: Checkout code
         uses: actions/checkout@v4
 
-      
       - name: Setup SSH key
         run: |
           echo "${{ secrets.pradeepgitkey }}" > key.pem
           chmod 400 key.pem
 
-      
       - name: Install SSH client
         run: |
           sudo apt-get update
           sudo apt-get install -y openssh-client
 
-      
       - name: Prepare EC2 directory
         run: |
-          ssh -o StrictHostKeyChecking=no -i key.pem ec2-user@13.233.127.9 "mkdir -p /home/ec2-user/app"
+          ssh -o StrictHostKeyChecking=no -i key.pem ec2-user@54.234.96.116 "mkdir -p /home/ec2-user/app"
 
-      
       - name: Copy project to EC2
         run: |
-          scp -o StrictHostKeyChecking=no -i key.pem -r . ec2-user@13.233.127.9:/home/ec2-user/app
+          scp -o StrictHostKeyChecking=no -i key.pem -r . ec2-user@54.234.96.116:/home/ec2-user/app
 
-     
       - name: Deploy on EC2
         run: |
-          ssh -o StrictHostKeyChecking=no -i key.pem ec2-user@13.233.127.9 << 'EOF'
+          ssh -o StrictHostKeyChecking=no -i key.pem ec2-user@54.234.96.116 << 'EOF'
 
           cd /home/ec2-user/app
 
