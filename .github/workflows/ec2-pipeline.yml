@@ -1,31 +1,46 @@
-name: ec2-pipeline
+name: EC2 Deploy Pipeline
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - main
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
+      
       - name: Checkout code
         uses: actions/checkout@v4
 
+      
       - name: Setup SSH key
         run: |
-          echo "${{ secrets.SECRET_KEY }}" > pradeepkey.pem
-          chmod 400 pradeepkey.pem
+          echo "${{ secrets.pradeepgitkey }}" > key.pem
+          chmod 400 key.pem
 
+      
       - name: Install SSH client
-        run: sudo apt-get update && sudo apt-get install -y openssh-client
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y openssh-client
 
+      
+      - name: Prepare EC2 directory
+        run: |
+          ssh -o StrictHostKeyChecking=no -i key.pem ec2-user@13.233.127.9 "mkdir -p /home/ec2-user/app"
+
+      
       - name: Copy project to EC2
         run: |
-          scp -o StrictHostKeyChecking=no -i pradeepkey.pem -r . ec2-user@13.233.127.9:/home/ec2-user/app
+          scp -o StrictHostKeyChecking=no -i key.pem -r . ec2-user@13.233.127.9:/home/ec2-user/app
 
-      - name: Deploy using Docker on EC2
+     
+      - name: Deploy on EC2
         run: |
-          ssh -o StrictHostKeyChecking=no -i pradeepkey.pem ec2-user@13.233.127.9 << 'EOF'
+          ssh -o StrictHostKeyChecking=no -i key.pem ec2-user@13.233.127.9 << 'EOF'
 
           cd /home/ec2-user/app
 
