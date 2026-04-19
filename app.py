@@ -11,7 +11,7 @@ def home():
     return render_template("index.html")
 
 
-#create acc
+# CREATE ACCOUNT
 @app.route("/create", methods=["POST"])
 def create():
     global acc_no
@@ -20,16 +20,14 @@ def create():
     accounts[acc_no] = {
         "name": name,
         "balance": 0,
-        "transactions": []
+        "transactions": ["Account created"]
     }
 
-    accounts[acc_no]["transactions"].append("Account created")
-
     acc_no += 1
-    return f" Account created! Account No: {acc_no-1}"
+    return f"Account created successfully! Account No: {acc_no - 1}"
 
 
-# deposit
+# DEPOSIT
 @app.route("/deposit", methods=["POST"])
 def deposit():
     acc = int(request.form["acc"])
@@ -38,9 +36,8 @@ def deposit():
     if acc in accounts:
         accounts[acc]["balance"] += amt
         accounts[acc]["transactions"].append(f"Deposited ₹{amt}")
-
         return f"Balance: ₹{accounts[acc]['balance']}"
-    return " Account not found"
+    return "Account not found"
 
 
 # WITHDRAW
@@ -53,47 +50,58 @@ def withdraw():
         if accounts[acc]["balance"] >= amt:
             accounts[acc]["balance"] -= amt
             accounts[acc]["transactions"].append(f"Withdrew ₹{amt}")
-
-            return f"Withdraw successful. Balance: ₹{accounts[acc]['balance']}"
-        else:
-            return " Insufficient balance"
-    return " Account not found"
+            return f"Balance: ₹{accounts[acc]['balance']}"
+        return "Insufficient balance"
+    return "Account not found"
 
 
-# checkacc
-@app.route("/account", methods=["POST"])
-def account():
+# TRANSFER
+@app.route("/transfer", methods=["POST"])
+def transfer():
+    from_acc = int(request.form["from_acc"])
+    to_acc = int(request.form["to_acc"])
+    amt = int(request.form["amount"])
+
+    if from_acc not in accounts:
+        return "From account not found"
+    if to_acc not in accounts:
+        return "To account not found"
+
+    if accounts[from_acc]["balance"] < amt:
+        return "Insufficient balance"
+
+    accounts[from_acc]["balance"] -= amt
+    accounts[to_acc]["balance"] += amt
+
+    accounts[from_acc]["transactions"].append(
+        f"Transferred ₹{amt} to {to_acc}"
+    )
+    accounts[to_acc]["transactions"].append(
+        f"Received ₹{amt} from {from_acc}"
+    )
+
+    return "Transfer successful"
+
+
+# HISTORY
+@app.route("/history", methods=["POST"])
+def history():
     acc = int(request.form["acc"])
 
     if acc in accounts:
-        data = accounts[acc]
-        return f" Name: {data['name']} |  Balance: ₹{data['balance']}"
-    return " Account not found"
+        return "<br>".join(accounts[acc]["transactions"])
+
+    return "Account not found"
 
 
-# delete acc
+# DELETE
 @app.route("/delete", methods=["POST"])
 def delete():
     acc = int(request.form["acc"])
 
     if acc in accounts:
         del accounts[acc]
-        return f"Account {acc} deleted successfully"
-    return " Account not found"
-
-
-# transaction his
-@app.route("/history", methods=["POST"])
-def history():
-    acc = int(request.form["acc"])
-
-    if acc in accounts:
-        transactions = accounts[acc]["transactions"]
-
-        if not transactions:
-            return "No transactions yet"
-
-        return "<br>".join(transactions)
+        return "Account deleted successfully"
 
     return "Account not found"
 
