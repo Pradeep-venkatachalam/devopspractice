@@ -5,46 +5,58 @@
 </head>
 <body>
 
-<h1>Pradeep Banking App</h1>
+<h1>Banking App</h1>
+
+<hr>
 
 <h2>Create Account</h2>
 <form action="/create" method="post">
     Name: <input type="text" name="name" required>
-    <button type="submit">Create</button>
+    <button>Create</button>
 </form>
+
+<hr>
 
 <h2>Deposit</h2>
 <form action="/deposit" method="post">
     Account No: <input type="number" name="acc" required>
     Amount: <input type="number" name="amount" required>
-    <button type="submit">Deposit</button>
+    <button>Deposit</button>
 </form>
+
+<hr>
 
 <h2>Withdraw</h2>
 <form action="/withdraw" method="post">
     Account No: <input type="number" name="acc" required>
     Amount: <input type="number" name="amount" required>
-    <button type="submit">Withdraw</button>
+    <button>Withdraw</button>
 </form>
 
-<h2>Check Account</h2>
-<form action="/account" method="post">
-    Account No: <input type="number" name="acc" required>
-    <button type="submit">Check</button>
+<hr>
+
+<h2>Transfer Money</h2>
+<form action="/transfer" method="post">
+    From Account: <input type="number" name="from_acc" required><br><br>
+    To Account: <input type="number" name="to_acc" required><br><br>
+    Amount: <input type="number" name="amount" required><br><br>
+    <button>Transfer</button>
 </form>
+
+<hr>
 
 <h2>Transaction History</h2>
 <form action="/history" method="post">
     Account No: <input type="number" name="acc" required>
-    <button type="submit">View History</button>
+    <button>View History</button>
 </form>
 
-<h2>Remove Account</h2>
+<hr>
+
+<h2>Delete Account</h2>
 <form action="/delete" method="post">
     Account No: <input type="number" name="acc" required>
-    <button type="submit" style="background:red;color:white;">
-        Delete
-    </button>
+    <button>Delete</button>
 </form>
 
 </body>
